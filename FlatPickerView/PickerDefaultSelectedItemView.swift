@@ -8,15 +8,15 @@
 
 import UIKit
 
-class PickerDefaultSelectedItemView: UIView {
+open class PickerDefaultSelectedItemView: UIView {
     
-    var direction: FlatPickerView.Direction = .vertical {
+    open var direction: FlatPickerView.Direction = .vertical {
         didSet{
             setNeedsDisplay()
         }
     }
     
-    var separatorEdge: UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+    open var separatorEdge: UIEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     
     convenience init(frame: CGRect, direction: FlatPickerView.Direction) {
         self.init(frame: frame)
@@ -27,7 +27,7 @@ class PickerDefaultSelectedItemView: UIView {
     
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
+    override open func draw(_ rect: CGRect) {
         super.draw(rect)
         let path: UIBezierPath = UIBezierPath()
         let edgedRect = UIEdgeInsetsInsetRect(rect, separatorEdge)

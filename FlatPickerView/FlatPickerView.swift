@@ -8,11 +8,11 @@
 
 import UIKit
 
-protocol FlatPickerViewDataSource: class {
+public protocol FlatPickerViewDataSource: class {
     func flatPickerNumberOfRows(pickerView: FlatPickerView)-> Int
 }
 
-protocol FlatPickerViewDelegate: class {
+public protocol FlatPickerViewDelegate: class {
     func flatPicker(pickerView: FlatPickerView, titleForRow row: Int) -> String?
     func flatPicker(pickerView: FlatPickerView, attributedTitleForRow row: Int) -> NSAttributedString?
     func flatPicker(pickerView: FlatPickerView, viewForRow row: Int) -> UIView?
@@ -22,10 +22,10 @@ protocol FlatPickerViewDelegate: class {
 
 }
 
-class FlatPickerView: UIView {
+open class FlatPickerView: UIView {
     
     //MARK: Definitions
-    enum Direction {
+    public enum Direction {
         case horizontal
         case vertical
     }
@@ -35,15 +35,15 @@ class FlatPickerView: UIView {
         self.initialize()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         initialize()
     }
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         setupInsetForCollection()
         if !initialized {
@@ -58,9 +58,9 @@ class FlatPickerView: UIView {
     }
     
     //MARK: Properties
-    var initialized: Bool = false
+    private var initialized: Bool = false
     
-    var itemSize: CGFloat = 50 {
+    open var itemSize: CGFloat = 50 {
         didSet{
             highlightedView?.constraints.forEach({$0.constant = itemSize})
             highlightedView?.layoutIfNeeded()
@@ -68,12 +68,12 @@ class FlatPickerView: UIView {
         }
     }
     
-    weak var delegate: FlatPickerViewDelegate? {
+    open weak var delegate: FlatPickerViewDelegate? {
         didSet{
             collectionView?.reloadData()
         }
     }
-    weak var dataSource: FlatPickerViewDataSource? {
+    open weak var dataSource: FlatPickerViewDataSource? {
         didSet{
             collectionView?.reloadData()
         }
@@ -82,7 +82,7 @@ class FlatPickerView: UIView {
     fileprivate weak var collectionView: UICollectionView!
     fileprivate weak var highlightedView: UIView!
     
-    var direction: Direction! {
+    open var direction: Direction! {
         didSet{
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.scrollDirection = direction == Direction.horizontal ? UICollectionViewScrollDirection.horizontal : UICollectionViewScrollDirection.vertical
@@ -197,7 +197,7 @@ class FlatPickerView: UIView {
     
     
     //MARK: Public functions
-    func selectRow(at row: Int, animated: Bool) {
+    open func selectRow(at row: Int, animated: Bool) {
         //collectionView?.selectItem(at: IndexPath(item: row, section: 0), animated: animated, scrollPosition: .)
         selectItemAtIntexPath(indexPath: IndexPath(item: row, section: 0), animated: animated, triggerDelegate: true)
     }
@@ -209,15 +209,15 @@ class FlatPickerView: UIView {
 }
 
 extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.dataSource?.flatPickerNumberOfRows(pickerView: self) ?? 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if let text = self.delegate?.flatPicker(pickerView: self, titleForRow: indexPath.item) {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextCollectionViewCell.reuseIdentifier, for: indexPath) as! TextCollectionViewCell
@@ -246,13 +246,14 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
         cell.contentView.addConstraints([leading, trailling, top, bottom])
     }
     
+    public
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
             adjustSelectedItem()
         }
     }
     
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         adjustSelectedItem()
     }
     
@@ -286,18 +287,18 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
 }
 
 extension FlatPickerView : UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if direction == .horizontal {
             return CGSize(width: itemSize, height: self.frame.size.height)
         }
         return CGSize(width: self.frame.size.width, height: itemSize)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 1
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 1
     }
 }

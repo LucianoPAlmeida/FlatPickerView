@@ -13,7 +13,6 @@
 		B283A5AA1E11A39200DD0351 /* FlatPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283A5A71E11A39200DD0351 /* FlatPickerView.swift */; };
 		B283A5AB1E11A39200DD0351 /* PickerDefaultSelectedItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283A5A81E11A39200DD0351 /* PickerDefaultSelectedItemView.swift */; };
 		B283A5AC1E11A39200DD0351 /* TextCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283A5A91E11A39200DD0351 /* TextCollectionViewCell.swift */; };
-		B283A5AE1E11A8C800DD0351 /* FlatPickerView.podspec in Resources */ = {isa = PBXBuildFile; fileRef = B283A5AD1E11A8C800DD0351 /* FlatPickerView.podspec */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +35,6 @@
 		B283A5A71E11A39200DD0351 /* FlatPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatPickerView.swift; sourceTree = "<group>"; };
 		B283A5A81E11A39200DD0351 /* PickerDefaultSelectedItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerDefaultSelectedItemView.swift; sourceTree = "<group>"; };
 		B283A5A91E11A39200DD0351 /* TextCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextCollectionViewCell.swift; sourceTree = "<group>"; };
-		B283A5AD1E11A8C800DD0351 /* FlatPickerView.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FlatPickerView.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +77,6 @@
 		B283A58F1E11A37E00DD0351 /* FlatPickerView */ = {
 			isa = PBXGroup;
 			children = (
-				B283A5AD1E11A8C800DD0351 /* FlatPickerView.podspec */,
 				B283A5901E11A37E00DD0351 /* FlatPickerView.h */,
 				B283A5911E11A37E00DD0351 /* Info.plist */,
 				B283A5A71E11A39200DD0351 /* FlatPickerView.swift */,
@@ -194,7 +191,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B283A5AE1E11A8C800DD0351 /* FlatPickerView.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,6 +418,7 @@
 				B283A5A31E11A37E00DD0351 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B283A5A41E11A37E00DD0351 /* Build configuration list for PBXNativeTarget "FlatPickerViewTests" */ = {
 			isa = XCConfigurationList;
@@ -430,6 +427,7 @@
 				B283A5A61E11A37E00DD0351 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
