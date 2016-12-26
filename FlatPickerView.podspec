@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'FlatPickerView'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of FlatPickerView.'
+  s.summary          = 'An iOS visual element witch behaviors like a UIPickerView but with flat design and more customizable.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +18,17 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
+                An iOS visual element witch behaviors like a UIPickerView but with flat design and more customizable. You can customize the direction of picker, the highlighted element view, and the actual element view also.
+                        DESC
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/FlatPickerView'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.homepage         = 'https://github.com/LucianoPAlmeida/FlatPickerView'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Luciano Almeida' => 'passos.luciano@outlook.com' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/FlatPickerView.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.source           = { :git => 'https://github.com/LucianoPAlmeida/FlatPickerView.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/LucianoPassos11'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
-  s.source_files = 'FlatPickerView/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'FlatPickerView' => ['FlatPickerView/Assets/*.png']
-  # }
+  s.source_files = 'FlatPickerView/**/*'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
