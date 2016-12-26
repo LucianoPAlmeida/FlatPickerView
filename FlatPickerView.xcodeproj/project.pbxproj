@@ -10,6 +10,9 @@
 		B283A5971E11A37E00DD0351 /* FlatPickerView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B283A58D1E11A37E00DD0351 /* FlatPickerView.framework */; };
 		B283A59C1E11A37E00DD0351 /* FlatPickerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283A59B1E11A37E00DD0351 /* FlatPickerViewTests.swift */; };
 		B283A59E1E11A37E00DD0351 /* FlatPickerView.h in Headers */ = {isa = PBXBuildFile; fileRef = B283A5901E11A37E00DD0351 /* FlatPickerView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B283A5AA1E11A39200DD0351 /* FlatPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283A5A71E11A39200DD0351 /* FlatPickerView.swift */; };
+		B283A5AB1E11A39200DD0351 /* PickerDefaultSelectedItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283A5A81E11A39200DD0351 /* PickerDefaultSelectedItemView.swift */; };
+		B283A5AC1E11A39200DD0351 /* TextCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B283A5A91E11A39200DD0351 /* TextCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +32,9 @@
 		B283A5961E11A37E00DD0351 /* FlatPickerViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlatPickerViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B283A59B1E11A37E00DD0351 /* FlatPickerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatPickerViewTests.swift; sourceTree = "<group>"; };
 		B283A59D1E11A37E00DD0351 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B283A5A71E11A39200DD0351 /* FlatPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatPickerView.swift; sourceTree = "<group>"; };
+		B283A5A81E11A39200DD0351 /* PickerDefaultSelectedItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerDefaultSelectedItemView.swift; sourceTree = "<group>"; };
+		B283A5A91E11A39200DD0351 /* TextCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +79,9 @@
 			children = (
 				B283A5901E11A37E00DD0351 /* FlatPickerView.h */,
 				B283A5911E11A37E00DD0351 /* Info.plist */,
+				B283A5A71E11A39200DD0351 /* FlatPickerView.swift */,
+				B283A5A81E11A39200DD0351 /* PickerDefaultSelectedItemView.swift */,
+				B283A5A91E11A39200DD0351 /* TextCollectionViewCell.swift */,
 			);
 			path = FlatPickerView;
 			sourceTree = "<group>";
@@ -149,6 +158,7 @@
 					B283A58C1E11A37E00DD0351 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 43Z9WE284C;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					B283A5951E11A37E00DD0351 = {
@@ -198,6 +208,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B283A5AB1E11A39200DD0351 /* PickerDefaultSelectedItemView.swift in Sources */,
+				B283A5AC1E11A39200DD0351 /* TextCollectionViewCell.swift in Sources */,
+				B283A5AA1E11A39200DD0351 /* FlatPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +335,7 @@
 		B283A5A21E11A37E00DD0351 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
@@ -334,6 +348,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lpa.FlatPickerView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -341,6 +356,7 @@
 		B283A5A31E11A37E00DD0351 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
@@ -360,6 +376,7 @@
 		B283A5A51E11A37E00DD0351 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
 				INFOPLIST_FILE = FlatPickerViewTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -372,6 +389,7 @@
 		B283A5A61E11A37E00DD0351 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 43Z9WE284C;
 				INFOPLIST_FILE = FlatPickerViewTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
