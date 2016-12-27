@@ -71,6 +71,7 @@ open class FlatPickerView: UIView {
     
     open weak var delegate: FlatPickerViewDelegate? {
         didSet{
+            setupPickerSelectionView()
             collectionView?.reloadData()
         }
     }
@@ -110,6 +111,7 @@ open class FlatPickerView: UIView {
         //Setting default direction
         direction = .vertical
         setupPickerSelectionView()
+
     }
     
     
@@ -130,6 +132,7 @@ open class FlatPickerView: UIView {
     }
     
     private func setupPickerSelectionView() {
+        highlightedView?.removeFromSuperview()
         let pickerSelectionView : UIView = self.delegate?.flatPickerViewForSelectedItem(pickerView: self) ?? PickerDefaultSelectedItemView(frame: CGRect.zero, direction : direction)
         if pickerSelectionView is PickerDefaultSelectedItemView {
             pickerSelectionView.isUserInteractionEnabled = false
@@ -174,7 +177,6 @@ open class FlatPickerView: UIView {
         let trailling: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.trailing, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
         let centerVertical: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.centerY, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
         let height: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: itemSize)
-        height.priority = 750
         highlightedView.addConstraint(height)
         let contraints = [leading, trailling, centerVertical]
         contraints.forEach({
@@ -190,7 +192,6 @@ open class FlatPickerView: UIView {
         let centerHorizontal: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.centerX, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
         let width: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: itemSize)
         highlightedView.addConstraint(width)
-        width.priority = 750
         let contraints = [top, bottom, centerHorizontal]
         contraints.forEach({
             $0.identifier = "horizontal"
