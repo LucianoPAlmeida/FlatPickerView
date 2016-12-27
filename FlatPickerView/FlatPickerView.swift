@@ -48,6 +48,7 @@ open class FlatPickerView: UIView {
         super.layoutSubviews()
         setupInsetForCollection()
         collectionView?.frame = CGRect(origin: CGPoint.zero, size: frame.size)
+        collectionView?.performBatchUpdates(nil, completion: nil)
         highlitedViewFrameForDirection()
         if !initialized {
             initialized = true
@@ -239,6 +240,7 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
                     point = CGPoint(x: layout.frame.origin.x - collectionView.contentInset.left, y: collectionView.contentOffset.y)
                 }
                 collectionView.setContentOffset( point, animated: animated)
+            
                 CATransaction.setCompletionBlock({
                     if self.currentSelectedRow == nil || self.currentSelectedRow != indexPath.item {
                         self.currentSelectedRow = indexPath.item
@@ -255,9 +257,9 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
 extension FlatPickerView : UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if direction == .horizontal {
-            return CGSize(width: itemSize, height: self.frame.size.height)
+            return CGSize(width: itemSize , height: self.frame.size.height )
         }
-        return CGSize(width: self.frame.size.width, height: itemSize)
+        return CGSize(width: self.frame.size.width , height: itemSize )
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
