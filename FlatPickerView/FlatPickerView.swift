@@ -20,7 +20,7 @@ public protocol FlatPickerViewDelegate: class {
     func flatPickerShouldShowSelectionView(pickerView: FlatPickerView) -> Bool
     func flatPicker(pickerView: FlatPickerView, didSelectRow row: Int)
     func flatPicker(pickerView: FlatPickerView, didPassOnSelection row: Int)
-
+    func flatPickerSpacingBetweenItems(pickerView: FlatPickerView)-> CGFloat?
 }
 
 open class FlatPickerView: UIView {
@@ -47,6 +47,8 @@ open class FlatPickerView: UIView {
     override open func layoutSubviews() {
         super.layoutSubviews()
         setupInsetForCollection()
+        collectionView?.frame = CGRect(origin: CGPoint.zero, size: frame.size)
+        highlitedViewFrameForDirection()
         if !initialized {
             initialized = true
             selectItemAtIntexPath(indexPath: IndexPath(item: (self.dataSource?.flatPickerNumberOfRows(pickerView: self) ?? 0)/2, section: 0), animated: false, triggerDelegate: false)
@@ -63,8 +65,7 @@ open class FlatPickerView: UIView {
     
     open var itemSize: CGFloat = 50 {
         didSet{
-            highlightedView?.constraints.forEach({$0.constant = itemSize})
-            highlightedView?.layoutIfNeeded()
+            highlitedViewFrameForDirection()
             collectionView?.reloadData()
         }
     }
@@ -98,7 +99,8 @@ open class FlatPickerView: UIView {
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
                 layout.scrollDirection = direction == Direction.horizontal ? UICollectionViewScrollDirection.horizontal : UICollectionViewScrollDirection.vertical
             }
-            enableConstrainsForDirection()
+            highlitedViewFrameForDirection()
+
         }
     }
     
@@ -114,10 +116,18 @@ open class FlatPickerView: UIView {
 
     }
     
+    private func highlitedViewFrameForDirection(){
+        if direction != nil {
+            if direction == .horizontal {
+                highlightedView?.frame = CGRect(x: frame.size.width/2 - (itemSize/2), y: 0, width: itemSize, height: frame.size.height)
+            }else{
+                highlightedView?.frame = CGRect(x: 0, y: frame.size.height/2 - (itemSize/2), width: frame.size.width, height: itemSize)
+            }
+        }
+    }
     
     private func setupCollectionView(){
         let collectionView: UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = UIColor.clear
@@ -127,8 +137,8 @@ open class FlatPickerView: UIView {
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "DefaultCell")
         collectionView.register(TextCollectionViewCell.self, forCellWithReuseIdentifier: TextCollectionViewCell.reuseIdentifier)
         addSubview(collectionView)
+        collectionView.frame = CGRect(origin: CGPoint.zero, size: frame.size)
         self.collectionView = collectionView
-        constrainsForCollection()
     }
     
     private func setupPickerSelectionView() {
@@ -137,84 +147,23 @@ open class FlatPickerView: UIView {
         if pickerSelectionView is PickerDefaultSelectedItemView {
             pickerSelectionView.isUserInteractionEnabled = false
         }
-        pickerSelectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(pickerSelectionView)
         bringSubview(toFront: pickerSelectionView)
         self.highlightedView = pickerSelectionView
-        contraintsForSelectedView()
+        highlitedViewFrameForDirection()
         highlightedView.isHidden = !(self.delegate?.flatPickerShouldShowSelectionView(pickerView: self) ?? true)
     }
     
     private func setupInsetForCollection(){
         if direction == .vertical {
-            collectionView.contentInset = UIEdgeInsets(top: (frame.size.height/2) - (itemSize/2), left: 0, bottom: (frame.size.height/2) - (itemSize/2), right: 0)
+            collectionView.contentInset = UIEdgeInsets(top: (frame.size.height/2) - (itemSize/2), left: 0, bottom: (frame.size.height/2) - (itemSize/2) , right: 0)
         }else{
             collectionView.contentInset = UIEdgeInsets(top: 0, left: (frame.size.width/2) - (itemSize/2), bottom: 0, right: (frame.size.width/2) - (itemSize/2))
         }
     }
     
-    private func contraintsForSelectedView(){
-        contraintsForVerticalSelectedView()
-        contraintsForHorizontalSelectedView()
-        enableConstrainsForDirection()
-    }
-    
-    private func enableConstrainsForDirection(){
-        if direction != nil{
-            self.constraints.forEach({
-                if $0.identifier == "vertical" {
-                    $0.isActive = direction == .vertical
-                }else if $0.identifier == "horizontal" {
-                    $0.isActive = direction == .horizontal
-                }
-            })
-        }
-    }
-    
-    
-    private func contraintsForVerticalSelectedView(){
-        let leading: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.leading, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
-        let trailling: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.trailing, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
-        let centerVertical: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.centerY, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
-        let height: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: itemSize)
-        height.priority = 750
-        highlightedView.addConstraint(height)
-        let contraints = [leading, trailling, centerVertical]
-        contraints.forEach({
-            $0.identifier = "vertical"
-            $0.isActive = false
-        })
-        addConstraints(contraints)
-    }
-    
-    private func contraintsForHorizontalSelectedView(){
-        let top: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.top, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        let bottom: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.bottom, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        let centerHorizontal: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.centerX, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
-        let width: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: itemSize)
-        width.priority = 750
-        highlightedView.addConstraint(width)
-        let contraints = [top, bottom, centerHorizontal]
-        contraints.forEach({
-            $0.identifier = "horizontal"
-            $0.isActive = false
-        })
-        addConstraints(contraints)
-    }
-    
-    
-    private func constrainsForCollection() {
-        let leading: NSLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.leading, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
-        let trailling: NSLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.trailing, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
-        let top: NSLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.top, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        let bottom: NSLayoutConstraint = NSLayoutConstraint(item: collectionView, attribute: NSLayoutAttribute.bottom, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        addConstraints([leading, trailling, top, bottom])
-    }
-    
-    
     //MARK: Public functions
     open func selectRow(at row: Int, animated: Bool) {
-        //collectionView?.selectItem(at: IndexPath(item: row, section: 0), animated: animated, scrollPosition: .)
         selectItemAtIntexPath(indexPath: IndexPath(item: row, section: 0), animated: animated, triggerDelegate: true)
     }
     
@@ -245,21 +194,12 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
             return cell
         }else if let view = self.delegate?.flatPicker(pickerView: self, viewForRow: indexPath.item){
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
+            view.frame =  cell.contentView.frame
             cell.contentView.subviews.forEach({$0.removeFromSuperview()})
             cell.contentView.addSubview(view)
-            constraintsForCustomViewCell(cell: cell, view: view)
             return cell
         }
         return UICollectionViewCell()
-    }
-    
-    private func constraintsForCustomViewCell(cell: UICollectionViewCell, view: UIView){
-        let leading: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutAttribute.leading, relatedBy: .equal, toItem: cell.contentView, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 0)
-        let trailling: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutAttribute.trailing, relatedBy: .equal, toItem: cell.contentView, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
-        let top: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutAttribute.top, relatedBy: .equal, toItem: cell.contentView, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        let bottom: NSLayoutConstraint = NSLayoutConstraint(item: view, attribute: NSLayoutAttribute.bottom, relatedBy: .equal, toItem: cell.contentView, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        cell.contentView.addConstraints([leading, trailling, top, bottom])
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -290,22 +230,24 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
     }
     
     fileprivate func selectItemAtIntexPath(indexPath: IndexPath, animated: Bool, triggerDelegate: Bool){
-        if let layout = collectionView.layoutAttributesForItem(at: indexPath){
-            var point: CGPoint = CGPoint.zero
-            if direction == .vertical {
-                point = CGPoint(x: collectionView.contentOffset.x, y: layout.frame.origin.y - collectionView.contentInset.top)
-            }else{
-                point = CGPoint(x: layout.frame.origin.x - collectionView.contentInset.left, y: collectionView.contentOffset.y)
-            }
-            collectionView.setContentOffset( point, animated: animated)
-            CATransaction.setCompletionBlock({
-                if self.currentSelectedRow == nil || self.currentSelectedRow != indexPath.item {
-                    self.currentSelectedRow = indexPath.item
-                    if triggerDelegate {
-                        self.delegate?.flatPicker(pickerView: self, didSelectRow: indexPath.item)
-                    }
+        if indexPath.item >= 0 && indexPath.row < collectionView.numberOfItems(inSection: 0){
+            if let layout = collectionView.layoutAttributesForItem(at: indexPath){
+                var point: CGPoint = CGPoint.zero
+                if direction == .vertical {
+                    point = CGPoint(x: collectionView.contentOffset.x, y: layout.frame.origin.y - collectionView.contentInset.top)
+                }else{
+                    point = CGPoint(x: layout.frame.origin.x - collectionView.contentInset.left, y: collectionView.contentOffset.y)
                 }
-            })
+                collectionView.setContentOffset( point, animated: animated)
+                CATransaction.setCompletionBlock({
+                    if self.currentSelectedRow == nil || self.currentSelectedRow != indexPath.item {
+                        self.currentSelectedRow = indexPath.item
+                        if triggerDelegate {
+                            self.delegate?.flatPicker(pickerView: self, didSelectRow: indexPath.item)
+                        }
+                    }
+                })
+            }
         }
     }
 }
@@ -319,11 +261,11 @@ extension FlatPickerView : UICollectionViewDelegateFlowLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
+        return self.delegate?.flatPickerSpacingBetweenItems(pickerView: self) ?? 1
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
+        return self.delegate?.flatPickerSpacingBetweenItems(pickerView: self) ?? 1
     }
 }
 
