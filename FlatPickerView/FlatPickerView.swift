@@ -19,6 +19,7 @@ public protocol FlatPickerViewDelegate: class {
     func flatPickerViewForSelectedItem(pickerView: FlatPickerView) -> UIView?
     func flatPickerShouldShowSelectionView(pickerView: FlatPickerView) -> Bool
     func flatPicker(pickerView: FlatPickerView, didSelectRow row: Int)
+    func flatPicker(pickerView: FlatPickerView, didPassOnSelection row: Int)
 
 }
 
@@ -51,7 +52,7 @@ open class FlatPickerView: UIView {
             selectItemAtIntexPath(indexPath: IndexPath(item: (self.dataSource?.flatPickerNumberOfRows(pickerView: self) ?? 0)/2, section: 0), animated: false, triggerDelegate: false)
         }else{
             if currentSelectedRow != nil {
-            selectItemAtIntexPath(indexPath: IndexPath(item: currentSelectedRow, section: 0), animated: true, triggerDelegate: true)
+                selectItemAtIntexPath(indexPath: IndexPath(item: currentSelectedRow, section: 0), animated: true, triggerDelegate: false)
             }
 
         }
@@ -73,6 +74,7 @@ open class FlatPickerView: UIView {
             collectionView?.reloadData()
         }
     }
+    
     open weak var dataSource: FlatPickerViewDataSource? {
         didSet{
             collectionView?.reloadData()
@@ -81,6 +83,14 @@ open class FlatPickerView: UIView {
     
     fileprivate weak var collectionView: UICollectionView!
     fileprivate weak var highlightedView: UIView!
+    
+    var isScroolEnabled: Bool = true {
+        didSet{
+            collectionView?.isScrollEnabled = isScroolEnabled
+        }
+    }
+    
+    fileprivate var lastIdxPassedOnSelection: Int!
     
     open var direction: Direction! {
         didSet{
@@ -121,6 +131,9 @@ open class FlatPickerView: UIView {
     
     private func setupPickerSelectionView() {
         let pickerSelectionView : UIView = self.delegate?.flatPickerViewForSelectedItem(pickerView: self) ?? PickerDefaultSelectedItemView(frame: CGRect.zero, direction : direction)
+        if pickerSelectionView is PickerDefaultSelectedItemView {
+            pickerSelectionView.isUserInteractionEnabled = false
+        }
         pickerSelectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(pickerSelectionView)
         bringSubview(toFront: pickerSelectionView)
@@ -246,8 +259,16 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
         cell.contentView.addConstraints([leading, trailling, top, bottom])
     }
     
-    public
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let indexPath = collectionView.indexPathForItem(at: CGPoint(x: highlightedView.center.x + collectionView.contentOffset.x, y: highlightedView.center.y + collectionView.contentOffset.y)){
+            if lastIdxPassedOnSelection == nil || indexPath.row != lastIdxPassedOnSelection{
+                lastIdxPassedOnSelection = indexPath.row
+                self.delegate?.flatPicker(pickerView: self, didPassOnSelection: indexPath.row)
+            }
+        }
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
             adjustSelectedItem()
         }
