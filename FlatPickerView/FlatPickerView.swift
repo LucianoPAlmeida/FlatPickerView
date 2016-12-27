@@ -177,6 +177,7 @@ open class FlatPickerView: UIView {
         let trailling: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.trailing, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.trailing, multiplier: 1, constant: 0)
         let centerVertical: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.centerY, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
         let height: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: itemSize)
+        height.priority = 750
         highlightedView.addConstraint(height)
         let contraints = [leading, trailling, centerVertical]
         contraints.forEach({
@@ -191,6 +192,7 @@ open class FlatPickerView: UIView {
         let bottom: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.bottom, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
         let centerHorizontal: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: NSLayoutAttribute.centerX, relatedBy: .equal, toItem: self, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
         let width: NSLayoutConstraint = NSLayoutConstraint(item: highlightedView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: itemSize)
+        width.priority = 750
         highlightedView.addConstraint(width)
         let contraints = [top, bottom, centerHorizontal]
         contraints.forEach({
