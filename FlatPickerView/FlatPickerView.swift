@@ -44,6 +44,7 @@ open class FlatPickerView: UIView {
         super.awakeFromNib()
         initialize()
     }
+    
     override open func layoutSubviews() {
         super.layoutSubviews()
         setupInsetForCollection()
@@ -61,13 +62,13 @@ open class FlatPickerView: UIView {
         }
     }
     
+    
     //MARK: Properties
     private var initialized: Bool = false
     
     open var itemSize: CGFloat = 50 {
         didSet{
             highlitedViewFrameForDirection()
-            collectionView?.reloadData()
         }
     }
     
@@ -114,6 +115,7 @@ open class FlatPickerView: UIView {
         //Setting default direction
         direction = .vertical
         setupPickerSelectionView()
+
 
     }
     
