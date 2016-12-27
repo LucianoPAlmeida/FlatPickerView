@@ -1,10 +1,5 @@
 # FlatPickerView
 
-[![CI Status](http://img.shields.io/travis/Luciano Almeida/FlatPickerView.svg?style=flat)](https://travis-ci.org/Luciano Almeida/FlatPickerView)
-[![Version](https://img.shields.io/cocoapods/v/FlatPickerView.svg?style=flat)](http://cocoapods.org/pods/FlatPickerView)
-[![License](https://img.shields.io/cocoapods/l/FlatPickerView.svg?style=flat)](http://cocoapods.org/pods/FlatPickerView)
-[![Platform](https://img.shields.io/cocoapods/p/FlatPickerView.svg?style=flat)](http://cocoapods.org/pods/FlatPickerView)
-
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
@@ -17,7 +12,7 @@ FlatPickerView is available through [CocoaPods](http://cocoapods.org). To instal
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "FlatPickerView"
+  pod 'FlatPickerView', :git => 'https://github.com/LucianoPAlmeida/FlatPickerView.git', :branch => 'master', :tag => '0.1.2'
 ```
 
 ## Author
