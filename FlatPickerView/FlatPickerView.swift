@@ -82,7 +82,7 @@ open class FlatPickerView: UIView {
     }
     
     fileprivate weak var collectionView: UICollectionView!
-    fileprivate weak var highlightedView: UIView!
+    open fileprivate(set) weak var highlightedView: UIView!
     
     var isScroolEnabled: Bool = true {
         didSet{
