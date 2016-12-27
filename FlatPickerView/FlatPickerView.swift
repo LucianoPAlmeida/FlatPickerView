@@ -51,7 +51,7 @@ open class FlatPickerView: UIView {
             selectItemAtIntexPath(indexPath: IndexPath(item: (self.dataSource?.flatPickerNumberOfRows(pickerView: self) ?? 0)/2, section: 0), animated: false, triggerDelegate: false)
         }else{
             if currentSelectedRow != nil {
-            selectItemAtIntexPath(indexPath: IndexPath(item: currentSelectedRow, section: 0), animated: true, triggerDelegate: false)
+            selectItemAtIntexPath(indexPath: IndexPath(item: currentSelectedRow, section: 0), animated: true, triggerDelegate: true)
             }
 
         }
