@@ -104,7 +104,7 @@ open class FlatPickerView: UIView {
         }
     }
     
-    fileprivate(set) var currentSelectedRow: Int!
+    open fileprivate(set) var currentSelectedRow: Int!
     
     
     
