@@ -31,40 +31,7 @@ open class FlatPickerView: UIView {
         case vertical
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.initialize()
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override open func awakeFromNib() {
-        super.awakeFromNib()
-        initialize()
-    }
-    
-    override open func layoutSubviews() {
-        super.layoutSubviews()
-        setupInsetForCollection()
-        collectionView?.frame = CGRect(origin: CGPoint.zero, size: frame.size)
-        collectionView?.performBatchUpdates(nil, completion: nil)
-        highlitedViewFrameForDirection()
-        if !initialized {
-            initialized = true
-            selectItemAtIntexPath(indexPath: IndexPath(item: (self.dataSource?.flatPickerNumberOfRows(pickerView: self) ?? 0)/2, section: 0), animated: false, triggerDelegate: false)
-        }else{
-            if currentSelectedRow != nil {
-                selectItemAtIntexPath(indexPath: IndexPath(item: currentSelectedRow, section: 0), animated: true, triggerDelegate: false)
-            }
-
-        }
-    }
-    
-    
     //MARK: Properties
-    private var initialized: Bool = false
     
     open var itemSize: CGFloat = 50 {
         didSet{
@@ -88,7 +55,7 @@ open class FlatPickerView: UIView {
     fileprivate weak var collectionView: UICollectionView!
     open fileprivate(set) weak var highlightedView: UIView!
     
-    var isScroolEnabled: Bool = true {
+    open var isScroolEnabled: Bool = true {
         didSet{
             collectionView?.isScrollEnabled = isScroolEnabled
         }
@@ -102,7 +69,7 @@ open class FlatPickerView: UIView {
                 layout.scrollDirection = direction == Direction.horizontal ? UICollectionViewScrollDirection.horizontal : UICollectionViewScrollDirection.vertical
             }
             highlitedViewFrameForDirection()
-
+            
         }
     }
     
@@ -110,27 +77,60 @@ open class FlatPickerView: UIView {
     
     
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.initialize()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override open func awakeFromNib() {
+        super.awakeFromNib()
+        initialize()
+    }
+    
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        setupInsetForCollection()
+        collectionView?.frame = CGRect(origin: CGPoint.zero, size: frame.size)
+        collectionView?.performBatchUpdates(nil, completion: nil)
+        highlitedViewFrameForDirection()
+        
+        let indexPath : IndexPath =  currentSelectedRow == nil ? IndexPath(item: (self.dataSource?.flatPickerNumberOfRows(pickerView: self) ?? 0)/2, section: 0) : IndexPath(item: currentSelectedRow, section: 0)
+        selectItemAtIntexPath(indexPath: indexPath, animated: false, triggerDelegate: false)
+    }
+
+    
     private func initialize(){
         setupCollectionView()
         //Setting default direction
         direction = .vertical
         setupPickerSelectionView()
-
-
+    }
+    
+    open func reload() {
+        self.collectionView?.reloadData()
     }
     
     private func highlitedViewFrameForDirection(){
         if direction != nil {
             if direction == .horizontal {
-                highlightedView?.frame = CGRect(x: frame.size.width/2 - (itemSize/2), y: 0, width: itemSize, height: frame.size.height)
+                highlightedView?.frame = CGRect(x: frame.size.width/2 - (itemSize/2),
+                                                y: 0,
+                                                width: itemSize, height: frame.size.height)
             }else{
-                highlightedView?.frame = CGRect(x: 0, y: frame.size.height/2 - (itemSize/2), width: frame.size.width, height: itemSize)
+                highlightedView?.frame = CGRect(x: 0,
+                                                y: frame.size.height/2 - (itemSize/2),
+                                                width: frame.size.width, height: itemSize)
             }
         }
     }
     
     private func setupCollectionView(){
-        let collectionView: UICollectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout())
+        let collectionView: UICollectionView = UICollectionView(frame: CGRect.zero,
+                                                                collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.backgroundColor = UIColor.clear
@@ -159,9 +159,15 @@ open class FlatPickerView: UIView {
     
     private func setupInsetForCollection(){
         if direction == .vertical {
-            collectionView.contentInset = UIEdgeInsets(top: (frame.size.height/2) - (itemSize/2), left: 0, bottom: (frame.size.height/2) - (itemSize/2) , right: 0)
+            collectionView.contentInset = UIEdgeInsets(top: (frame.size.height/2) - (itemSize/2),
+                                                       left: 0,
+                                                       bottom: (frame.size.height/2) - (itemSize/2) ,
+                                                       right: 0)
         }else{
-            collectionView.contentInset = UIEdgeInsets(top: 0, left: (frame.size.width/2) - (itemSize/2), bottom: 0, right: (frame.size.width/2) - (itemSize/2))
+            collectionView.contentInset = UIEdgeInsets(top: 0,
+                                                       left: (frame.size.width/2) - (itemSize/2),
+                                                       bottom: 0,
+                                                       right: (frame.size.width/2) - (itemSize/2))
         }
     }
     
@@ -225,10 +231,24 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
     }
     
     private func adjustSelectedItem(){
-        
-        if let indexPath = collectionView.indexPathForItem(at: CGPoint(x: highlightedView.center.x + collectionView.contentOffset.x, y: highlightedView.center.y + collectionView.contentOffset.y)){
-            selectItemAtIntexPath(indexPath: indexPath, animated: true, triggerDelegate: true)
-        }
+        var incrementalSpacing: CGFloat = 0
+        var point : CGPoint = CGPoint(x: highlightedView.center.x + collectionView.contentOffset.x, y: highlightedView.center.y + collectionView.contentOffset.y)
+        //Searching for the nearst cell
+        repeat {
+            if let indexPath = collectionView.indexPathForItem(at: point) {
+                selectItemAtIntexPath(indexPath: indexPath, animated: true, triggerDelegate: true)
+                break
+            }else {
+                incrementalSpacing += 1.0
+                if direction == .vertical {
+                    point = CGPoint(x: highlightedView.center.x + collectionView.contentOffset.x,
+                                    y: highlightedView.center.y + collectionView.contentOffset.y + incrementalSpacing)
+                }else {
+                    point = CGPoint(x: highlightedView.center.x + collectionView.contentOffset.x + incrementalSpacing,
+                                    y: highlightedView.center.y + collectionView.contentOffset.y)
+                }
+            }
+        }while point.x < frame.size.width || point.y < frame.size.height
 
     }
     
