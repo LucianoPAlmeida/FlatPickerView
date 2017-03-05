@@ -110,6 +110,7 @@ open class FlatPickerView: UIView {
         setupPickerSelectionView()
     }
     
+    
     open func reload() {
         self.collectionView?.reloadData()
     }
@@ -194,23 +195,35 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if let text = self.delegate?.flatPicker(pickerView: self, titleForRow: indexPath.item) {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextCollectionViewCell.reuseIdentifier, for: indexPath) as! TextCollectionViewCell
-            cell.textLabel.text = text
-            return cell
+            return generateCellForText(collectionView, indexPath: indexPath, text: text)
         }else if let attrText = self.delegate?.flatPicker(pickerView: self, attributedTitleForRow: indexPath.row){
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextCollectionViewCell.reuseIdentifier, for: indexPath) as! TextCollectionViewCell
-            cell.textLabel.attributedText = attrText
-            return cell
+            return generateCellForAttibutedText(collectionView, indexPath: indexPath, attributedText: attrText)
         }else if let view = self.delegate?.flatPicker(pickerView: self, viewForRow: indexPath.item){
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
-            view.frame =  cell.contentView.frame
-            cell.contentView.subviews.forEach({$0.removeFromSuperview()})
-            cell.contentView.addSubview(view)
-            return cell
+            return generateCustomViewCell(collectionView, indexPath: indexPath, view: view)
         }
         return UICollectionViewCell()
     }
     
+    //MARK: Generate cells
+    private func generateCustomViewCell(_ collectionView: UICollectionView, indexPath: IndexPath, view : UIView) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DefaultCell", for: indexPath)
+        view.frame =  cell.contentView.frame
+        cell.contentView.subviews.forEach({$0.removeFromSuperview()})
+        cell.contentView.addSubview(view)
+        return cell
+    }
+    
+    private func generateCellForAttibutedText(_ collectionView: UICollectionView, indexPath: IndexPath, attributedText : NSAttributedString) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextCollectionViewCell.reuseIdentifier, for: indexPath) as! TextCollectionViewCell
+        cell.textLabel.attributedText = attributedText
+        return cell
+    }
+    
+    private func generateCellForText(_ collectionView: UICollectionView, indexPath: IndexPath, text : String) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TextCollectionViewCell.reuseIdentifier, for: indexPath) as! TextCollectionViewCell
+        cell.textLabel.text = text
+        return cell
+    }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let indexPath = collectionView.indexPathForItem(at: CGPoint(x: highlightedView.center.x + collectionView.contentOffset.x, y: highlightedView.center.y + collectionView.contentOffset.y)){
@@ -249,7 +262,7 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
                                     y: highlightedView.center.y + collectionView.contentOffset.y)
                 }
             }
-        }while point.x < frame.size.width || point.y < frame.size.height
+        } while point.x < frame.size.width || point.y < frame.size.height
 
     }
     
