@@ -211,6 +211,7 @@ extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
         return UICollectionViewCell()
     }
     
+    
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let indexPath = collectionView.indexPathForItem(at: CGPoint(x: highlightedView.center.x + collectionView.contentOffset.x, y: highlightedView.center.y + collectionView.contentOffset.y)){
             if lastIdxPassedOnSelection == nil || indexPath.row != lastIdxPassedOnSelection{
