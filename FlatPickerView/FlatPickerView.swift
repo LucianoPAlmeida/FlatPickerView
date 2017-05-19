@@ -177,7 +177,7 @@ open class FlatPickerView: UIView {
         selectItemAtIntexPath(indexPath: IndexPath(item: row, section: 0), animated: animated, triggerDelegate: true)
     }
     
-    func viewForRow(at row: Int) -> UIView?{
+    open func viewForRow(at row: Int) -> UIView?{
         return collectionView.cellForItem(at: IndexPath(item: row, section: 0))?.contentView
     }
     
