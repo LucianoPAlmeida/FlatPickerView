@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol FlatPickerViewDataSource: class {
-    func flatPickerNumberOfRows(pickerView: FlatPickerView)-> Int
+    func flatPickerNumberOfRows(pickerView: FlatPickerView) -> Int
 }
 
 public protocol FlatPickerViewDelegate: class {
@@ -103,7 +103,7 @@ open class FlatPickerView: UIView {
     }
 
     
-    private func initialize(){
+    private func initialize() {
         setupCollectionView()
         //Setting default direction
         direction = .vertical
@@ -115,7 +115,7 @@ open class FlatPickerView: UIView {
         self.collectionView?.reloadData()
     }
     
-    private func highlitedViewFrameForDirection(){
+    private func highlitedViewFrameForDirection() {
         if direction != nil {
             if direction == .horizontal {
                 highlightedView?.frame = CGRect(x: frame.size.width/2 - (itemSize/2),
@@ -129,7 +129,7 @@ open class FlatPickerView: UIView {
         }
     }
     
-    private func setupCollectionView(){
+    private func setupCollectionView() {
         let collectionView: UICollectionView = UICollectionView(frame: CGRect.zero,
                                                                 collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.showsVerticalScrollIndicator = false
@@ -183,7 +183,7 @@ open class FlatPickerView: UIView {
     
 }
 
-extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource{
+extension FlatPickerView: UICollectionViewDelegate, UICollectionViewDataSource {
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
